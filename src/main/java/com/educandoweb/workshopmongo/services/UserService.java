@@ -1,6 +1,7 @@
 package com.educandoweb.workshopmongo.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,18 @@ public class UserService {
 		repo.deleteById(id);
 	}
 	
+	public User update(User obj) {
+		User newObj = repo.findById(obj.getId()).orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
+		updateData(newObj, obj);
+		
+		return repo.save(newObj);
+	}
 	
+	private void updateData(User newObj, User obj) {
+		newObj.setEmail(obj.getEmail());
+		newObj.setName(obj.getName());
+	}
+
 	public User fromDTO(UserDTO objDTO) {
 		return new User(objDTO.getId(), objDTO.getName(), objDTO.getEmail());
 	}
